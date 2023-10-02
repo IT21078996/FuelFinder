@@ -1,11 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:fuel_finder/screens/AddStation.dart';
 import 'package:fuel_finder/screens/home.dart';
 import 'package:fuel_finder/screens/map.dart';
 import 'package:fuel_finder/screens/cfc.dart';
 import 'package:fuel_finder/screens/user.dart';
 import 'package:fuel_finder/widgets/navigation.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
