@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -32,6 +33,38 @@ class _RegisterState extends State<Register> {
       setState(() {
         _image = File(pickedFile.path);
       });
+    }
+  }
+
+  Future<void> _uploadImageAndRegister() async {
+    try {
+      // Check if an image is selected
+      if (_image != null) {
+        // Get a reference to the Firebase Storage bucket
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('profile_pictures/${name}_profile.jpg');
+
+        // Upload the image to Firebase Storage
+        final UploadTask uploadTask = storageRef.putFile(_image!);
+
+        // Get the download URL of the uploaded image
+        final TaskSnapshot taskSnapshot = await uploadTask;
+        final String profilePictureUrl =
+            await taskSnapshot.ref.getDownloadURL();
+
+        // Register the user with name, email, and profile picture URL
+        dynamic result = await _auth.registerWithEmailAndPassword(
+            name, email, password, profilePictureUrl);
+
+        if (result == null) {
+          setState(() {
+            error = "Please enter valid information.";
+          });
+        }
+      }
+    } catch (error) {
+      print(error.toString());
     }
   }
 
@@ -81,7 +114,7 @@ class _RegisterState extends State<Register> {
                     children: [
                       // Name input field
                       TextFormField(
-                        decoration: txtInputDeco.copyWith(hintText: "Name"),
+                        decoration: txtInputDeco2.copyWith(labelText: "Name"),
                         validator: (value) =>
                             value?.isEmpty == true ? "Enter your name" : null,
                         onChanged: (value) {
@@ -91,9 +124,9 @@ class _RegisterState extends State<Register> {
                         },
                       ),
                       const SizedBox(height: 20),
-                      // Email input field (unchanged)
+                      // Email input field
                       TextFormField(
-                        decoration: txtInputDeco,
+                        decoration: txtInputDeco2.copyWith(labelText: "Email"),
                         validator: (value) => value?.isEmpty == true
                             ? "Enter a valid email"
                             : null,
@@ -104,10 +137,11 @@ class _RegisterState extends State<Register> {
                         },
                       ),
                       const SizedBox(height: 20),
-                      // Password input field (unchanged)
+                      // Password input field
                       TextFormField(
                         obscureText: true,
-                        decoration: txtInputDeco.copyWith(hintText: "Password"),
+                        decoration:
+                            txtInputDeco2.copyWith(labelText: "Password"),
                         validator: (value) =>
                             value!.length < 6 ? "Enter a valid password" : null,
                         onChanged: (value) {
@@ -125,15 +159,15 @@ class _RegisterState extends State<Register> {
                                 height: 100,
                                 width: 100,
                                 decoration: BoxDecoration(
-                                  color: textBody,
+                                  color: Colors.white,
                                   borderRadius: BorderRadius.circular(100),
                                   border:
                                       Border.all(width: 2, color: secondary),
                                 ),
                                 child: const Icon(
-                                  Icons.camera_alt,
+                                  Icons.person_add_alt_1,
                                   size: 50,
-                                  color: secondary,
+                                  color: textBody,
                                 ),
                               )
                             : CircleAvatar(
@@ -171,29 +205,17 @@ class _RegisterState extends State<Register> {
                       const SizedBox(height: 20),
                       GestureDetector(
                         onTap: () async {
-                          dynamic result =
-                              await _auth.registerWithEmailAndPassword(
-                                  name, email, password);
-
-                          if (result == null) {
-                            setState(() {
-                              error = "Please enter valid information.";
-                            });
-                          }
+                          _uploadImageAndRegister();
                         },
                         child: Container(
                           height: 50,
                           width: 200,
-                          decoration: BoxDecoration(
-                            color: textBody,
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(width: 2, color: secondary),
-                          ),
+                          decoration: buttonDeco,
                           child: const Center(
                             child: Text(
                               "Register",
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 18,
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500,
                               ),
