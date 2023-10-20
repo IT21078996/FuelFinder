@@ -69,7 +69,8 @@ class _LoginState extends State<Login> {
                       children: [
                         // email
                         TextFormField(
-                          decoration: txtInputDeco,
+                          decoration:
+                              txtInputDeco2.copyWith(labelText: "Email"),
                           validator: (value) => value?.isEmpty == true
                               ? "Enter a valid email"
                               : null,
@@ -84,7 +85,7 @@ class _LoginState extends State<Login> {
                         TextFormField(
                           obscureText: true,
                           decoration:
-                              txtInputDeco.copyWith(hintText: "Password"),
+                              txtInputDeco2.copyWith(labelText: "Password"),
                           validator: (value) => value!.length < 6
                               ? "Enter a valid password"
                               : null,
@@ -143,15 +144,12 @@ class _LoginState extends State<Login> {
                           child: Container(
                             height: 50,
                             width: 200,
-                            decoration: BoxDecoration(
-                                color: textBody,
-                                borderRadius: BorderRadius.circular(100),
-                                border: Border.all(width: 2, color: secondary)),
+                            decoration: buttonDeco,
                             child: const Center(
                                 child: Text(
                               "Login",
                               style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 18,
                                   color: Colors.white,
                                   fontWeight: FontWeight.w500),
                             )),
@@ -167,15 +165,12 @@ class _LoginState extends State<Login> {
                           child: Container(
                             height: 50,
                             width: 200,
-                            decoration: BoxDecoration(
-                                color: textBody,
-                                borderRadius: BorderRadius.circular(100),
-                                border: Border.all(width: 2, color: secondary)),
+                            decoration: buttonDeco,
                             child: const Center(
                                 child: Text(
                               "Login as Guest",
                               style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 18,
                                   color: Colors.white,
                                   fontWeight: FontWeight.w500),
                             )),

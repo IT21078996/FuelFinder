@@ -35,9 +35,6 @@ class _MapScreenWithLocationState extends State<MapScreenWithLocation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Map with Current Location"),
-      ),
       body: MapScreen(currentLocation),
     );
   }
@@ -52,13 +49,17 @@ class MapScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return GoogleMap(
       initialCameraPosition: CameraPosition(
-        target: currentLocation ?? LatLng(0, 0), // Default to (0, 0) if current location is unavailable
+        target: currentLocation ??
+            LatLng(
+                0, 0), // Default to (0, 0) if current location is unavailable
         zoom: 15.0,
       ),
       markers: Set<Marker>.of([
         Marker(
           markerId: MarkerId('currentLocation'),
-          position: currentLocation ?? LatLng(0, 0), // Default to (0, 0) if current location is unavailable
+          position: currentLocation ??
+              LatLng(
+                  0, 0), // Default to (0, 0) if current location is unavailable
           infoWindow: InfoWindow(title: 'Current Location'),
         ),
       ]),
