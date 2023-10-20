@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fuel_finder/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -7,7 +8,9 @@ class AuthService {
 
   // create a user from firebase user with uid
   UserModel? _userWithFirebaseUserUid(User? user) {
-    return user != null ? UserModel(uid: user.uid) : null;
+    return user != null
+        ? UserModel(uid: user.uid, name: '', email: '', profilePictureUrl: '')
+        : null;
   }
 
   // create the stream for checking the auth changes in the user
@@ -28,11 +31,22 @@ class AuthService {
   }
 
   // register using using email & password
-  Future registerWithEmailAndPassword(String email, String password) async {
+  Future registerWithEmailAndPassword(
+      String name, String email, String password) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
+
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'name': name,
+          'email': email,
+          'profilePicture': '',
+        });
+
+        return _userWithFirebaseUserUid(user);
+      }
     } catch (error) {
       print(error.toString());
       return null;

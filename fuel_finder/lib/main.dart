@@ -18,7 +18,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamProvider<UserModel?>.value(
       value: AuthService().user,
-      initialData: UserModel(uid: ""),
+      initialData:
+          UserModel(uid: "", name: '', email: '', profilePictureUrl: ''),
       child: MaterialApp(
         title: 'FuelFinder',
         theme: ThemeData(
