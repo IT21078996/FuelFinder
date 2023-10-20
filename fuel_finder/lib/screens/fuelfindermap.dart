@@ -6,13 +6,16 @@ import 'dart:convert';
 import 'package:google_maps_webservice/places.dart';
 
 class Fuelfinder extends StatefulWidget {
-  const Fuelfinder({Key? key}) : super(key: key);
+
+  final String location;
+  const Fuelfinder({required this.location, Key? key}) : super(key: key);
 
   @override
   _FuelfinderState createState() => _FuelfinderState();
 }
 
 class _FuelfinderState extends State<Fuelfinder> {
+
   GoogleMapController? mapController;
   LatLng? currentLocation;
   LatLng? destinationLocation;
@@ -53,7 +56,7 @@ class _FuelfinderState extends State<Fuelfinder> {
   Future<void> searchNearbyFuelStations(Location destinationLocation) async {
     final response = await places.searchNearbyWithRadius(
       Location(lat: destinationLocation.lat, lng: destinationLocation.lng),
-       5000, // Adjust the radius as needed
+      5000, // Adjust the radius as needed
       keyword: 'fuel station',
     );
 
@@ -132,7 +135,7 @@ class _FuelfinderState extends State<Fuelfinder> {
 
     final response = await http.get(Uri.parse(url));
 
-        if (response.statusCode == 200) {
+    if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
       if (data['status'] == 'OK') {
         return data;
@@ -142,7 +145,7 @@ class _FuelfinderState extends State<Fuelfinder> {
         throw Exception('Google Maps API Error: ${data['status']}');
       }
     } else {
-    throw Exception('Failed to fetch directions');
+      throw Exception('Failed to fetch directions');
     }
   }
   Future<void> displayNearbyFuelStationsOnMap(List<PlaceDetails> fuelStations) async {
@@ -172,11 +175,15 @@ class _FuelfinderState extends State<Fuelfinder> {
         width: MediaQuery.of(context).size.width,
         child: Column(
           children: [
+            Text("Location: ${widget.location}"),
             ElevatedButton(
               onPressed: () async {
                 final destination = await Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => DestinationSearchScreen(places: places),
+                    builder: (context) => DestinationSearchScreen(
+                      places: places,
+                      location: widget.location,
+                    ),
                   ),
                 );
                 if (destination != null) {
@@ -216,15 +223,23 @@ class _FuelfinderState extends State<Fuelfinder> {
 
 class DestinationSearchScreen extends StatefulWidget {
   final GoogleMapsPlaces places;
+  final String location;
 
-  DestinationSearchScreen({required this.places});
+  DestinationSearchScreen({required this.places, required this.location});
 
   @override
   _DestinationSearchScreenState createState() => _DestinationSearchScreenState();
 }
 
 class _DestinationSearchScreenState extends State<DestinationSearchScreen> {
-  TextEditingController destinationController = TextEditingController();
+  late TextEditingController destinationController;
+
+  @override
+  void initState() {
+    super.initState();
+    destinationController = TextEditingController(text: widget.location);
+  }
+
 
   @override
   Widget build(BuildContext context) {
