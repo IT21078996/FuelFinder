@@ -3,12 +3,6 @@ import 'package:fuel_finder/screens/showall.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
-void main() {
-  runApp(MaterialApp(
-    home: MapScreenWithLocation(),
-  ));
-}
-
 class MapScreenWithLocation extends StatefulWidget {
   @override
   _MapScreenWithLocationState createState() => _MapScreenWithLocationState();
