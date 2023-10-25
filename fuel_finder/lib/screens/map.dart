@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_finder/screens/showall.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -36,6 +37,15 @@ class _MapScreenWithLocationState extends State<MapScreenWithLocation> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: MapScreen(currentLocation),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navigate to the "ShowAll" page here
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => showall(),
+          ));
+        },
+        child: Icon(Icons.list), // List icon
+      ),
     );
   }
 }
@@ -62,7 +72,8 @@ class MapScreen extends StatelessWidget {
                   0, 0), // Default to (0, 0) if current location is unavailable
           infoWindow: InfoWindow(title: 'Current Location'),
         ),
-      ]),
+      ])
     );
+
   }
 }
