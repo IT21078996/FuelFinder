@@ -19,6 +19,9 @@ class _showallState extends State<showall> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Favourite Stations"),
+      ),
       body: StreamBuilder(
         stream: _stations.snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
