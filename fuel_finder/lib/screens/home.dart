@@ -18,26 +18,41 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          // Logo in the top left corner
-          Positioned(
-            top: 10, // Adjust the position as needed
-            left: 80, // Adjust the position as needed
-            child: Image.asset(
-              'assets/images/logo.png', // Replace with the path to your logo image
-              width: 250,
-              height: 70, // Adjust the width as needed
+          const Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: Column(
+                children: [
+                  Text(
+                    'FUEL',
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                  Text(
+                    'FINDER',
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           const Align(
             alignment: Alignment.topLeft,
             child: Padding(
               padding: const EdgeInsets.only(left: 10, top: 120),
-              // Adjust the padding as needed
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  SizedBox(height: 20),
+                  SizedBox(height: 40),
                   Text(
                     'Welcome to Fuel Finder',
                     style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
@@ -52,15 +67,14 @@ class _HomeState extends State<Home> {
             ),
           ),
           Positioned(
-            top: 280, // Adjust the position as needed
-            left: 20, // Adjust the position as needed
+            top: 300,
+            left: 20,
             child: CustomContainer(
-              width: 370, // Changeable width
-              height: 275, // Changeable height
-              backgroundColor: Colors.black12, // Set the background color to light blue
+              width: 370,
+              height: 275,
+              backgroundColor: Colors.black12, // Background color
               onProceedPressed: () {
                 if (selectedVehicleType.isNotEmpty) {
-                  // Navigate to the 'AddStation' screen or perform your action.
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => MapScreenWithLocation(),
@@ -85,7 +99,7 @@ class _HomeState extends State<Home> {
                     },
                   );
                 }
-              },// Set the background color to light blue
+              },
               child: Column(
                 children: <Widget>[
                   Padding(
@@ -100,7 +114,7 @@ class _HomeState extends State<Home> {
                     children: <Widget>[
                       VehicleCard(
                         vehicleType: 'Gas',
-                        iconData: Icons.local_gas_station, // Icon for Gas
+                        iconData: Icons.local_gas_station,
                         isSelected: selectedVehicleType == 'Gas',
                         onSelect: () {
                           setState(() {
@@ -111,7 +125,7 @@ class _HomeState extends State<Home> {
                       SizedBox(width: 16),
                       VehicleCard(
                         vehicleType: 'Electric',
-                        iconData: Icons.battery_charging_full, // Icon for Electric
+                        iconData: Icons.battery_charging_full,
                         isSelected: selectedVehicleType == 'Electric',
                         onSelect: () {
                           setState(() {
@@ -119,7 +133,6 @@ class _HomeState extends State<Home> {
                           });
                         },
                       ),
-
                     ],
                   ),
                 ],
@@ -134,7 +147,7 @@ class _HomeState extends State<Home> {
 
 class VehicleCard extends StatelessWidget {
   final String vehicleType;
-  final IconData iconData; // Icon for the vehicle type
+  final IconData iconData;
   final bool isSelected;
   final VoidCallback onSelect;
 
@@ -152,15 +165,15 @@ class VehicleCard extends StatelessWidget {
       child: Card(
         color: isSelected ? Colors.red : Colors.white,
         child: SizedBox(
-          width: 100, // Adjust the width as needed
-          height: 100, // Adjust the height as needed
+          width: 100,
+          height: 100,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Icon(
                 iconData,
-                size: 40, // Adjust the icon size as needed
-                color: isSelected ? Colors.white : Colors.black, // Adjust icon color
+                size: 40,
+                color: isSelected ? Colors.white : Colors.black,
               ),
               SizedBox(height: 8),
               Text(
@@ -174,8 +187,6 @@ class VehicleCard extends StatelessWidget {
     );
   }
 }
-
-
 
 class CustomContainer extends StatelessWidget {
   final double width;
@@ -201,13 +212,13 @@ class CustomContainer extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           Positioned(
-            bottom: 10, // Adjust the position as needed
-            right: 10, // Adjust the position as needed
+            bottom: 10,
+            right: 10,
             child: ElevatedButton(
               onPressed: onProceedPressed,
               child: Container(
-                width: 150, // Adjust the width as needed
-                height: 30, // Adjust the height as needed
+                width: 150,
+                height: 30,
                 child: Center(
                   child: Text(
                     'Proceed  >',
@@ -217,10 +228,9 @@ class CustomContainer extends StatelessWidget {
               ),
             ),
           ),
-          child, // Your original content
+          child,
         ],
       ),
     );
   }
 }
-
