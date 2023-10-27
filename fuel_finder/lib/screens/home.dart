@@ -77,7 +77,7 @@ class _HomeState extends State<Home> {
                 if (selectedVehicleType.isNotEmpty) {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => MapScreenWithLocation(),
+                      builder: (context) => Fuelfinderr(),
                     ),
                   );
                   print('Selected vehicle type: $selectedVehicleType');
