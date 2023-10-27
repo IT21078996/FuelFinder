@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_finder/screens/showall.dart';
 
+import 'home.dart';
+
 class AdminHomePage extends StatefulWidget {
   @override
   _AdminHomePageState createState() => _AdminHomePageState();
@@ -11,7 +13,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
   static const List<Widget> _widgetOptions = <Widget>[
     Text('Users'),
     showall(),
-    Text('App Home'),
+    Home(),
   ];
 
   void _onItemTapped(int index) {

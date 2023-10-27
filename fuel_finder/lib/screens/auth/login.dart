@@ -4,6 +4,9 @@ import 'package:fuel_finder/constants/text.dart';
 import 'package:fuel_finder/services/auth.dart';
 import 'package:flutter/material.dart';
 
+import '../AdminH.dart';
+import '../home.dart';
+
 class Login extends StatefulWidget {
   final Function toggle;
   const Login({Key? key, required this.toggle}) : super(key: key);
@@ -132,13 +135,27 @@ class _LoginState extends State<Login> {
                         ),
                         GestureDetector(
                           onTap: () async {
-                            dynamic result = await _auth
-                                .signInWithEmailAndPassword(email, password);
+                            dynamic result = await _auth.signInWithEmailAndPassword(email, password);
 
                             if (result == null) {
                               setState(() {
                                 error = "Invalid email or password";
                               });
+                            }else{
+                              // Check if the user's email is 'admin@gmail.com'
+                              if (email == 'admin@gmail.com' && password == 'admin123') {
+                                Navigator.of(context).pushReplacement( // Use pushReplacement to replace the current page.
+                                  MaterialPageRoute(
+                                    builder: (context) => AdminHomePage(), // Replace AdminHomePage with your actual admin home page.
+                                  ),
+                                );
+                              } else {
+                                Navigator.of(context).pushReplacement( // Use pushReplacement to replace the current page.
+                                  MaterialPageRoute(
+                                    builder: (context) => Home(), // Replace AdminHomePage with your actual admin home page.
+                                  ),
+                                );
+                              }
                             }
                           },
                           child: Container(
