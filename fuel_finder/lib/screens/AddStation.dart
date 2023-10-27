@@ -20,6 +20,8 @@ class _AddStationState extends State<AddStation> {
   final TextEditingController _noofpumpsController = TextEditingController();
   List<String> OpenCloseStatusOptions = ['OPEN', 'CLOSE'];
   String selectedOpenCloseStatus = 'OPEN'; // Default value
+  bool evChargersAvailable = false;
+
 
   final CollectionReference _poiCollection = FirebaseFirestore.instance
       .collection('stations');
@@ -63,6 +65,21 @@ class _AddStationState extends State<AddStation> {
                       ),
                     ),
                     SizedBox(height: 20.0),
+                    Row(
+                      children: [
+                        Text('EV Chargers Available: ',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Checkbox(
+                          value: evChargersAvailable,
+                          onChanged: (newValue) {
+                            setState(() {
+                              evChargersAvailable = newValue!;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
                     TextField(
                       controller: _stationnameController,
                       decoration: const InputDecoration(
@@ -139,6 +156,7 @@ class _AddStationState extends State<AddStation> {
                             "noofpumps": noofpumps,
                             "status": selectedOpenCloseStatus,
                             "fuelTypeQuantityMap": fuelTypeQuantityMap,
+                            "evChargersAvailable": evChargersAvailable, // Include EV chargers availability
                           });
 
                           _stationnameController.text = '';
@@ -170,7 +188,7 @@ class _AddStationState extends State<AddStation> {
   Future<void> _update([DocumentSnapshot? documentSnapshot]) async {
     if (documentSnapshot != null) {
 
-        selectedOpenCloseStatus = documentSnapshot['status'];
+      selectedOpenCloseStatus = documentSnapshot['status'];
       _stationnameController.text = documentSnapshot['SName'];
       _locationController.text = documentSnapshot['Location'];
       _noofpumpsController.text = documentSnapshot['noofpumps'];
@@ -408,16 +426,13 @@ class _AddStationState extends State<AddStation> {
     await _poiCollection.doc(placeId).delete();
 
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('You have successfully deleted a place'),
+      content: Text('You have successfully deleted a station'),
     ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Add Stations"),
-      ),
       body: StreamBuilder(
         stream: _poiCollection.snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {

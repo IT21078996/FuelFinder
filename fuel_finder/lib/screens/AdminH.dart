@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_finder/screens/AddStation.dart';
 import 'package:fuel_finder/screens/showall.dart';
 
 import 'home.dart';
@@ -12,7 +13,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
   int _selectedIndex = 0;
   static const List<Widget> _widgetOptions = <Widget>[
     Text('Users'),
-    showall(),
+    AddStation(),
     Home(),
   ];
 
