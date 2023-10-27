@@ -37,12 +37,12 @@ const txtInputDeco = InputDecoration(
 const txtInputDeco2 = InputDecoration(
   labelText: '',
   enabledBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+    borderRadius: BorderRadius.all(Radius.circular(15.0)),
     borderSide: BorderSide(color: secondary, width: 2),
   ),
   focusedBorder: OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(20.0)),
-    borderSide: BorderSide(color: primary, width: 2),
+    borderSide: BorderSide(color: primary, width: 1),
   ),
 );
 
