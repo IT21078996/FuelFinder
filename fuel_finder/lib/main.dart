@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fuel_finder/models/user.dart';
+import 'package:fuel_finder/screens/AdminH.dart';
 import 'package:fuel_finder/screens/wrapper.dart';
 import 'package:fuel_finder/services/auth.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.deepOrange,
         ),
-        home: const Wrapper(),
+        home: AdminHomePage(),
       ),
     );
   }
