@@ -189,6 +189,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fuel_finder/screens/showall.dart';
+import 'package:fuel_finder/screens/showallEV.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -537,7 +538,50 @@ class _DestinationSearchScreenState extends State<DestinationSearchScreen> {
     return LatLng(0, 0);
   }
 }
-
+Future<void> _showVehicleTypeDialog(BuildContext context) async {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text('Choose Vehicle Type ',
+          style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),
+        ),
+        actions: <Widget>[
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => showall(),
+              ));
+            },
+            style: ElevatedButton.styleFrom(
+              primary: Colors.blue, // Button background color
+              minimumSize: Size(150, 50), // Button size
+            ),
+            child: Text(
+              'Gas',
+              style: TextStyle(fontSize: 20), // Text size
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => showallEV(),
+              ));
+            },
+            style: ElevatedButton.styleFrom(
+              primary: Colors.green, // Button background color
+              minimumSize: Size(150, 50), // Button size
+            ),
+            child: Text(
+              'EV',
+              style: TextStyle(fontSize: 20), // Text size
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
 class MapScreen extends StatefulWidget {
   final LatLng currentLocation;
   final LatLng? destinationLocation;
@@ -669,12 +713,11 @@ class _MapScreenState extends State<MapScreen> {
             ),
         ],
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigate to the "ShowAll" page here
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => showall(),
-          ));
+          // Show the vehicle type selection dialog
+          _showVehicleTypeDialog(context);
         },
         child: Icon(Icons.list), // List icon
       ),
