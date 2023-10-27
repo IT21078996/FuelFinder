@@ -64,42 +64,48 @@ class DetailPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           SizedBox(height: 24.0),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Icon(
-                                Icons.local_gas_station,
-                                size: 24.0,
-                              ),
-                              SizedBox(width: 16.0),
-                              Text(
-                                sname,
-                                style: const TextStyle(
-                                  fontSize: 18,
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.local_gas_station,
+                                  size: 24.0,
                                 ),
-                              ),
-                            ],
+                                SizedBox(width: 16.0),
+                                Text(
+                                  sname,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           SizedBox(height: 16.0),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Icon(
-                                Icons.map,
-                                size: 24.0,
-                              ),
-                              SizedBox(width: 16.0),
-                              Text(
-                                location,
-                                style: const TextStyle(
-                                  fontSize: 18,
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child:Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.map,
+                                  size: 24.0,
                                 ),
-                              ),
-                            ],
+                                SizedBox(width: 16.0),
+                                Text(
+                                  location,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           SizedBox(height: 32.0),
                           SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
+                            scrollDirection: Axis.horizontal, // Make it scroll horizontally
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: fuelTypeQuantityData.entries.map((entry) {
@@ -163,6 +169,7 @@ class DetailPage extends StatelessWidget {
                     ),
                   ),
                 ),
+
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(
