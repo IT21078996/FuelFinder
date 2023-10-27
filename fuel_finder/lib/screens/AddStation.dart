@@ -15,12 +15,22 @@ class _AddStationState extends State<AddStation> {
   // Text fields' controllers
   final TextEditingController _stationnameController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
-  final TextEditingController _fueltypeController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
   final TextEditingController _noofpumpsController = TextEditingController();
+
+  final TextEditingController _latitudeController = TextEditingController();
+  final TextEditingController _longitudeController = TextEditingController();
+
+
   List<String> OpenCloseStatusOptions = ['OPEN', 'CLOSE'];
   String selectedOpenCloseStatus = 'OPEN'; // Default value
+
   bool evChargersAvailable = false;
+
+  // Define fuel type options
+  List<String> fuelTypeOptions = ['Petrol', 'Diesel', 'Petrol (95)', 'Super Diesel', 'Chargers'];
+
+  String selectedFuelType = 'Petrol'; // Default value
 
 
   final CollectionReference _poiCollection = FirebaseFirestore.instance
@@ -97,10 +107,43 @@ class _AddStationState extends State<AddStation> {
                     ),
                     const SizedBox(height: 20),
                     TextField(
-                      controller: _fueltypeController,
+                      controller: _latitudeController,
                       decoration: const InputDecoration(
-                        labelText: 'Fuel Type : ',
+                        labelText: 'Latitude: ',
                         labelStyle: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: _longitudeController,
+                      decoration: const InputDecoration(
+                        labelText: 'Longitude: ',
+                        labelStyle: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+
+                    const SizedBox(height: 50),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.black,
+                        ),
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      alignment: Alignment.centerLeft, // Adjust alignment as needed
+                      child: DropdownButton<String>(
+                        value: selectedFuelType,
+                        onChanged: (newValue) {
+                          setState(() {
+                            selectedFuelType = newValue!;
+                          });
+                        },
+                        items: fuelTypeOptions.map((fuelType) {
+                          return DropdownMenuItem<String>(
+                            value: fuelType,
+                            child: Text(fuelType),
+                          );
+                        }).toList(),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -116,18 +159,25 @@ class _AddStationState extends State<AddStation> {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      child: const Text('Add Fuel Type and Quantity'),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Colors.black54), // Change the button's background color
+                        padding: MaterialStateProperty.all(EdgeInsets.all(10.0)), // Adjust padding
+                        textStyle: MaterialStateProperty.all(TextStyle(fontSize: 16)), // Change the text style
+                      ),
+                      child: Text('Add Fuel Type and Quantity',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       onPressed: () {
-                        final String fuelType = _fueltypeController.text;
+                        final String fuelType = selectedFuelType;
                         final String quantity = _quantityController.text;
 
                         if (fuelType.isNotEmpty && quantity.isNotEmpty) {
                           fuelTypeQuantityMap[fuelType] = quantity;
-                          _fueltypeController.text = '';
                           _quantityController.text = '';
                         }
                       },
-                    ),
+                    )
+                    ,
                     const SizedBox(height: 20),
                     TextField(
                       controller: _noofpumpsController,
@@ -138,9 +188,16 @@ class _AddStationState extends State<AddStation> {
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 80),
                     ElevatedButton(
-                      child: const Text('Submit'),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent), // Change the button's background color
+                        padding: MaterialStateProperty.all(EdgeInsets.all(12.0)), // Adjust padding
+                        textStyle: MaterialStateProperty.all(TextStyle(fontSize: 24)), // Change the text style
+                      ),
+                      child: const Text('Submit',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       onPressed: () async {
                         final String sname = _stationnameController.text;
                         final String location = _locationController.text;
@@ -157,11 +214,15 @@ class _AddStationState extends State<AddStation> {
                             "status": selectedOpenCloseStatus,
                             "fuelTypeQuantityMap": fuelTypeQuantityMap,
                             "evChargersAvailable": evChargersAvailable, // Include EV chargers availability
+                            "latitude": _latitudeController.text,
+                            "longitude": _longitudeController.text,
                           });
 
                           _stationnameController.text = '';
                           _locationController.text = '';
                           _noofpumpsController.text = '';
+                          _latitudeController.text = '';
+                          _longitudeController.text = '';
                           fuelTypeQuantityMap.clear();
 
                           Navigator.of(context).pop();
@@ -192,6 +253,9 @@ class _AddStationState extends State<AddStation> {
       _stationnameController.text = documentSnapshot['SName'];
       _locationController.text = documentSnapshot['Location'];
       _noofpumpsController.text = documentSnapshot['noofpumps'];
+
+      _latitudeController.text = documentSnapshot['latitude'];
+      _longitudeController.text = documentSnapshot['longitude'];
 
       // Populate the fuelTypeQuantityMap from the document snapshot
       Map<String, dynamic> fuelTypeQuantityData =
@@ -238,6 +302,22 @@ class _AddStationState extends State<AddStation> {
                       ),
                     ),
                     SizedBox(height: 20.0),
+                    Row(
+                      children: [
+                        Text('EV Chargers Available: ',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Checkbox(
+                          value: evChargersAvailable,
+                          onChanged: (newValue) {
+                            setState(() {
+                              evChargersAvailable = newValue!;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20.0),
                     TextField(
                       controller: _stationnameController,
                       decoration: const InputDecoration(
@@ -254,6 +334,22 @@ class _AddStationState extends State<AddStation> {
                       ),
                     ),
                     const SizedBox(height: 20),
+                    TextField(
+                      controller: _latitudeController,
+                      decoration: const InputDecoration(
+                        labelText: 'Latitude: ',
+                        labelStyle: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: _longitudeController,
+                      decoration: const InputDecoration(
+                        labelText: 'Longitude: ',
+                        labelStyle: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                    const SizedBox(height: 50),
                     // Display Fuel Types and Quantities
                     if (fuelTypeQuantityMap.isNotEmpty)
                       Column(
@@ -283,12 +379,20 @@ class _AddStationState extends State<AddStation> {
                         ],
                       ),
                     const SizedBox(height: 20),
-                    TextField(
-                      controller: _fueltypeController,
-                      decoration: const InputDecoration(
-                        labelText: 'Fuel Type : ',
-                        labelStyle: TextStyle(color: Colors.grey),
-                      ),
+
+                    DropdownButton<String>(
+                      value: selectedFuelType,
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedFuelType = newValue!;
+                        });
+                      },
+                      items: fuelTypeOptions.map((fuelType) {
+                        return DropdownMenuItem<String>(
+                          value: fuelType,
+                          child: Text(fuelType),
+                        );
+                      }).toList(),
                     ),
                     const SizedBox(height: 20),
                     TextField(
@@ -303,14 +407,18 @@ class _AddStationState extends State<AddStation> {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Colors.black54), // Change the button's background color
+                        padding: MaterialStateProperty.all(EdgeInsets.all(10.0)), // Adjust padding
+                        textStyle: MaterialStateProperty.all(TextStyle(fontSize: 16)), // Change the text style
+                      ),
                       child: const Text('Add Fuel Type and Quantity'),
                       onPressed: () {
-                        final String fuelType = _fueltypeController.text;
+                        final String fuelType = selectedFuelType;
                         final String quantity = _quantityController.text;
 
                         if (fuelType.isNotEmpty && quantity.isNotEmpty) {
                           fuelTypeQuantityMap[fuelType] = quantity;
-                          _fueltypeController.text = '';
                           _quantityController.text = '';
                         }
                       },
@@ -327,6 +435,11 @@ class _AddStationState extends State<AddStation> {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent), // Change the button's background color
+                        padding: MaterialStateProperty.all(EdgeInsets.all(12.0)), // Adjust padding
+                        textStyle: MaterialStateProperty.all(TextStyle(fontSize: 24)), // Change the text style
+                      ),
                       child: const Text('Update'),
                       onPressed: () async {
                         final String sname = _stationnameController.text;
@@ -339,11 +452,16 @@ class _AddStationState extends State<AddStation> {
                           "noofpumps": noofpumps,
                           "status": selectedOpenCloseStatus,
                           "fuelTypeQuantityMap": fuelTypeQuantityMap,
+                          "evChargersAvailable": evChargersAvailable,
+                          "latitude": _latitudeController.text,
+                          "longitude": _longitudeController.text,
                         });
 
                         _stationnameController.text = '';
                         _locationController.text = '';
                         _noofpumpsController.text = '';
+                        _latitudeController.text = '';
+                        _longitudeController.text = '';
                         fuelTypeQuantityMap.clear();
 
                         Navigator.of(context).pop();
@@ -426,13 +544,16 @@ class _AddStationState extends State<AddStation> {
     await _poiCollection.doc(placeId).delete();
 
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('You have successfully deleted a station'),
+      content: Text('You have successfully deleted a place'),
     ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Add Stations"),
+      ),
       body: StreamBuilder(
         stream: _poiCollection.snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
@@ -451,11 +572,11 @@ class _AddStationState extends State<AddStation> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: Icon(Icons.edit),
+                          icon: Icon(Icons.edit, color: Colors.green),
                           onPressed: () => _update(documentSnapshot),
                         ),
                         IconButton(
-                          icon: Icon(Icons.delete),
+                          icon: Icon(Icons.delete, color: Colors.red),
                           onPressed: () => _delete(documentSnapshot.id),
                         ),
                       ],
@@ -475,7 +596,7 @@ class _AddStationState extends State<AddStation> {
         onPressed: () => _create(),
         child: const Icon(Icons.add),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

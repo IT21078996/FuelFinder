@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_finder/screens/AddStation.dart';
 import 'package:fuel_finder/screens/showall.dart';
+import 'package:fuel_finder/screens/wrapper.dart';
 
 import 'home.dart';
 
@@ -39,6 +40,9 @@ class _AdminHomePageState extends State<AdminHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_getAppBarTitle(_selectedIndex)),
+        actions: <Widget>[
+          _buildLogoutButton(),
+        ],
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
@@ -63,6 +67,19 @@ class _AdminHomePageState extends State<AdminHomePage> {
         unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
       ),
+    );
+  }
+
+  Widget _buildLogoutButton() {
+    return IconButton(
+      icon: Icon(Icons.logout),
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const Wrapper(),
+          ),
+        );
+      },
     );
   }
 }
