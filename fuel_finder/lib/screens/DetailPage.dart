@@ -167,7 +167,7 @@ class DetailPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => Fuelfinder(location: location), // Pass the location to the new page
+                        builder: (context) => Fuelfinder(), // Pass the location to the new page
                       ),
                     );
                   },

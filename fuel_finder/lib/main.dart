@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fuel_finder/models/user.dart';
+import 'package:fuel_finder/screens/fuelfindermap.dart';
 import 'package:fuel_finder/screens/wrapper.dart';
 import 'package:fuel_finder/services/auth.dart';
 import 'package:provider/provider.dart';
