@@ -551,9 +551,7 @@ class _AddStationState extends State<AddStation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Add Stations"),
-      ),
+
       body: StreamBuilder(
         stream: _poiCollection.snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
