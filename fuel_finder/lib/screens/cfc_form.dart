@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fuel_finder/constants/colors.dart';
+import 'package:fuel_finder/constants/styles.dart';
 import 'package:fuel_finder/screens/cfc_result.dart';
 
 class CFCForm extends StatefulWidget {
@@ -10,6 +12,7 @@ class CFCForm extends StatefulWidget {
 
 class _CFCFormState extends State<CFCForm> {
   int currentStep = 0; // Track the current step
+  bool showFoodWeights = false;
   String? selectedVehicleType;
   TextEditingController distanceController = TextEditingController();
   bool homemadeFood = true;
@@ -25,6 +28,15 @@ class _CFCFormState extends State<CFCForm> {
   String? selectedElectricitySource;
   double carbonFootprint = 0;
 
+  // Create boolean variables for each food type to track whether to show the text fields.
+  bool showMeatWeight = true;
+  bool showDairyWeight = true;
+  bool? showVegetablesWeight = false;
+  bool? showGrainsWeight = true;
+  bool? showFruitsWeight = false;
+  bool? showSeafoodWeight = false;
+  bool? showProcessedFoodsWeight = true;
+
   // Define the steps for the Stepper
   List<Step> steps = [];
 
@@ -35,19 +47,32 @@ class _CFCFormState extends State<CFCForm> {
     // Define the steps for the Stepper
     steps = [
       Step(
-        title: Text('Travel Data'),
+        title: Row(
+          children: [
+            Image.asset('assets/images/step1.png', height: 50, width: 50),
+            Text(
+              'Travel Data',
+              style: TextStyle(fontSize: 18),
+            ),
+          ],
+        ),
+        subtitle: Text(
+          'Distance that you have traveled and medium',
+          style: TextStyle(fontSize: 14),
+        ),
         content: Column(
           children: [
-            Text('The Distance that you have traveled'),
+            const SizedBox(height: 20),
             TextField(
               controller: distanceController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                hintText: 'Distance (km)',
-              ),
+              decoration: txtInputDeco2.copyWith(
+                  labelText: 'Distance', suffix: Text('km')),
             ),
-            DropdownButton<String>(
+            const SizedBox(height: 10),
+            DropdownButtonFormField<String>(
               value: selectedVehicleType,
+              decoration: txtInputDeco2.copyWith(labelText: 'Vehicle Type'),
               items: const [
                 DropdownMenuItem<String>(
                   value: 'car',
@@ -71,19 +96,33 @@ class _CFCFormState extends State<CFCForm> {
                   selectedVehicleType = value;
                 });
               },
-              hint: Text('Select Vehicle Type'),
             ),
+            const SizedBox(height: 10),
           ],
         ),
         isActive: currentStep == 0, // Mark as active step
       ),
       Step(
-        title: Text('Food Consumption Data'),
+        title: Row(
+          children: [
+            Image.asset('assets/images/step2.png', height: 50, width: 50),
+            Text(
+              'Diet Data',
+              style: TextStyle(fontSize: 18),
+            ),
+          ],
+        ),
+        subtitle: Text(
+          'Food that you have consumed',
+          style: TextStyle(fontSize: 14),
+        ),
         content: Column(
           children: [
-            DropdownButton<String>(
+            const SizedBox(height: 10),
+            DropdownButtonFormField<String>(
               value: selectedFoodType,
-              items: [
+              decoration: txtInputDeco2.copyWith(labelText: 'Food Source'),
+              items: const [
                 DropdownMenuItem<String>(
                   value: 'homemade',
                   child: Text('Homemade Food'),
@@ -98,74 +137,169 @@ class _CFCFormState extends State<CFCForm> {
                   selectedFoodType = value;
                 });
               },
-              hint: Text('Select Food Type'),
             ),
-            Text('Meat Weight (kg)'),
-            TextField(
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                meatWeight = double.tryParse(value) ?? 0;
+            CheckboxListTile(
+              title: Text('Meat Weight (kg)'),
+              value: showMeatWeight,
+              onChanged: (bool? value) {
+                setState(() {
+                  showMeatWeight = value!;
+                  print('Meat Weight CheckBox: $showMeatWeight');
+                });
               },
             ),
-            Text('Dairy Weight (kg)'),
-            TextField(
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                dairyWeight = double.tryParse(value) ?? 0;
+            Visibility(
+              visible: showMeatWeight,
+              child: TextField(
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  meatWeight = double.tryParse(value) ?? 0;
+                },
+              ),
+            ),
+            CheckboxListTile(
+              title: Text('Dairy Weight (kg)'),
+              value: showDairyWeight,
+              onChanged: (bool? value) {
+                setState(() {
+                  showDairyWeight = value!;
+                  print('dairy Weight CheckBox: $showDairyWeight');
+                });
               },
             ),
-            Text('Vegetables Weight (kg)'),
-            TextField(
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                vegetablesWeight = double.tryParse(value) ?? 0;
+            Visibility(
+              visible: showDairyWeight,
+              child: TextField(
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  dairyWeight = double.tryParse(value) ?? 0;
+                },
+              ),
+            ),
+            CheckboxListTile(
+              title: Text('Vegetables Weight (kg)'),
+              value: showVegetablesWeight ?? false,
+              onChanged: (bool? value) {
+                setState(() {
+                  showVegetablesWeight = value;
+                });
               },
             ),
-            Text('Grains Weight (kg)'),
-            TextField(
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                grainsWeight = double.tryParse(value) ?? 0;
+            Visibility(
+              visible: showVegetablesWeight ?? false,
+              child: TextField(
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  vegetablesWeight = double.tryParse(value) ?? 0;
+                },
+              ),
+            ),
+            CheckboxListTile(
+              title: Text('Grains Weight (kg)'),
+              value: showGrainsWeight ?? false,
+              onChanged: (bool? value) {
+                setState(() {
+                  showGrainsWeight = value;
+                });
               },
             ),
-            Text('Fruits Weight (kg)'),
-            TextField(
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                fruitsWeight = double.tryParse(value) ?? 0;
+            Visibility(
+              visible: showGrainsWeight ?? false,
+              child: TextField(
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  grainsWeight = double.tryParse(value) ?? 0;
+                },
+              ),
+            ),
+            CheckboxListTile(
+              title: Text('Fruits Weight (kg)'),
+              value: showFruitsWeight ?? false,
+              onChanged: (bool? value) {
+                setState(() {
+                  showFruitsWeight = value;
+                });
               },
             ),
-            Text('Seafood Weight (kg)'),
-            TextField(
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                seafoodWeight = double.tryParse(value) ?? 0;
+            Visibility(
+              visible: showFruitsWeight ?? false,
+              child: TextField(
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  fruitsWeight = double.tryParse(value) ?? 0;
+                },
+              ),
+            ),
+            CheckboxListTile(
+              title: Text('Seafood Weight (kg)'),
+              value: showSeafoodWeight ?? false,
+              onChanged: (bool? value) {
+                setState(() {
+                  showSeafoodWeight = value;
+                });
               },
             ),
-            Text('Processed Foods Weight (kg)'),
-            TextField(
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                processedFoodsWeight = double.tryParse(value) ?? 0;
+            Visibility(
+              visible: showSeafoodWeight ?? false,
+              child: TextField(
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  seafoodWeight = double.tryParse(value) ?? 0;
+                },
+              ),
+            ),
+            CheckboxListTile(
+              title: Text('Processed Foods Weight (kg)'),
+              value: showProcessedFoodsWeight ?? false,
+              onChanged: (bool? value) {
+                setState(() {
+                  showProcessedFoodsWeight = value;
+                });
               },
+            ),
+            Visibility(
+              visible: showProcessedFoodsWeight ?? false,
+              child: TextField(
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  processedFoodsWeight = double.tryParse(value) ?? 0;
+                },
+              ),
             ),
           ],
         ),
         isActive: currentStep == 1, // Mark as active step
       ),
       Step(
-        title: Text('Electricity Consumption Data'),
+        title: Row(
+          children: [
+            Image.asset('assets/images/step3.png', height: 50, width: 50),
+            Text(
+              'Electricity Data',
+              style: TextStyle(fontSize: 18),
+            ),
+          ],
+        ),
+        subtitle: Text(
+          'Electricity that you have consumed',
+          style: TextStyle(fontSize: 14),
+        ),
         content: Column(
           children: [
-            Text('Electricity Consumption (kWh)'),
+            const SizedBox(height: 20),
             TextField(
               keyboardType: TextInputType.number,
+              decoration: txtInputDeco2.copyWith(
+                  labelText: 'Electricity consumption', suffix: Text('kWh')),
               onChanged: (value) {
                 electricityConsumption = double.tryParse(value) ?? 0;
               },
             ),
-            DropdownButton<String>(
+            const SizedBox(height: 10),
+            DropdownButtonFormField<String>(
               value: selectedElectricitySource,
+              decoration:
+                  txtInputDeco2.copyWith(labelText: 'Electricity Source'),
               items: const [
                 DropdownMenuItem<String>(
                   value: 'coal',
@@ -185,8 +319,8 @@ class _CFCFormState extends State<CFCForm> {
                   selectedElectricitySource = value;
                 });
               },
-              hint: Text('Select Electricity Source'),
             ),
+            const SizedBox(height: 10),
           ],
         ),
         isActive: currentStep == 2, // Mark as active step
@@ -198,7 +332,7 @@ class _CFCFormState extends State<CFCForm> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Carbon Calculator'),
+          title: Text('Carbon Tracker'),
         ),
         body: Stepper(
           currentStep: currentStep,
