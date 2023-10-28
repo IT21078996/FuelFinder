@@ -17,13 +17,12 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+ Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'FuelFinder',
+     title: 'FuelFinder',
       theme: ThemeData(
-        primarySwatch: Colors.deepOrange,
-      ),
-      home: const BottomNavigationDemo(),
+       primarySwatch: Colors.deepOrange,),
+     home: const BottomNavigationDemo(),
     );
   }
 }
@@ -31,39 +30,39 @@ class MyApp extends StatelessWidget {
 class BottomNavigationDemo extends StatefulWidget {
   const BottomNavigationDemo({super.key});
 
-  @override
+ @override
   _BottomNavigationDemoState createState() => _BottomNavigationDemoState();
 }
 
 class _BottomNavigationDemoState extends State<BottomNavigationDemo> {
   int _selectedIndex = 0;
 
-  void _onItemTapped(int index) {
+ void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-  }
+ }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+     appBar: AppBar(
         title: const Text('FuelFinder'),
       ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+     body: Center(
+       child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigation(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+currentIndex: _selectedIndex,
+ onTap: _onItemTapped,
       ),
-    );
-  }
+   );
+ }
 
   final List<Widget> _widgetOptions = <Widget>[
-    const Home(),
-    const Map(),
-    const CFC(),
-    const User(),
-  ];
+const Home(),
+   const Map(),
+const CFC(),
+   const User(),
+ ];
 }
