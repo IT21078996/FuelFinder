@@ -61,7 +61,7 @@ class _BottomNavigationDemoState extends State<BottomNavigationDemo> {
 
   final List<Widget> _widgetOptions = <Widget>[
     const Home(),
-    MapScreenWithLocation(),
+    Fuelfinderr(),
     const CFC(),
     const User(),
   ];
