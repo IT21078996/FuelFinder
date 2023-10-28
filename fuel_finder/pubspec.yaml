@@ -45,7 +45,7 @@ dependencies:
   http: ^0.13.4
   google_maps_directions: 0.0.3+4
   flutter_statusbarcolor_ns: ^0.5.0
-
+  intl: ^0.18.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fuel_finder/constants/colors.dart';
 import 'package:fuel_finder/constants/styles.dart';
 import 'package:fuel_finder/screens/cfc_result.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CFCForm extends StatefulWidget {
   const CFCForm({Key? key}) : super(key: key);
@@ -31,11 +32,34 @@ class _CFCFormState extends State<CFCForm> {
   // Create boolean variables for each food type to track whether to show the text fields.
   bool showMeatWeight = true;
   bool showDairyWeight = true;
-  bool? showVegetablesWeight = false;
+  bool? showVegetablesWeight = true;
   bool? showGrainsWeight = true;
   bool? showFruitsWeight = false;
   bool? showSeafoodWeight = false;
   bool? showProcessedFoodsWeight = true;
+
+  Future<void> saveUserDataToFirestore({
+    double? carbonFootprint,
+    double? travelEmissions,
+    double? dietEmissions,
+    double? electricityEmissions,
+  }) async {
+    try {
+      final firestoreInstance = FirebaseFirestore.instance;
+
+      await firestoreInstance.collection('cfc_logs').add({
+        'carbonFootprint': carbonFootprint,
+        'travelEmissions': travelEmissions,
+        'dietEmissions': dietEmissions,
+        'electricityEmissions': electricityEmissions,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+
+      print('User data saved to Firestore.');
+    } catch (e) {
+      print('Error saving data to Firestore: $e');
+    }
+  }
 
   // Define the steps for the Stepper
   List<Step> steps = [];
@@ -331,44 +355,58 @@ class _CFCFormState extends State<CFCForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Carbon Tracker'),
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(125.0),
+          child: AppBar(
+            flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/cfc_form_banner.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            // title: Text('Carbon Tracker'),
+          ),
         ),
-        body: Stepper(
-          currentStep: currentStep,
-          onStepContinue: () {
-            if (currentStep < steps.length - 1) {
-              setState(() {
-                currentStep++;
-              });
-            } else {
-              calculateCarbonFootprint();
-            }
-          },
-          onStepCancel: () {
-            if (currentStep > 0) {
-              setState(() {
-                currentStep--;
-              });
-            }
-          },
-          steps: steps,
-          controlsBuilder: (BuildContext context, ControlsDetails details) {
-            return Row(
-              children: <Widget>[
-                if (details.onStepContinue != null)
-                  ElevatedButton(
-                    onPressed: details.onStepContinue,
-                    child: Text('Next'),
-                  ),
-                if (details.onStepCancel != null)
-                  TextButton(
-                    onPressed: details.onStepCancel,
-                    child: Text('Back'),
-                  ),
-              ],
-            );
-          },
+        body: Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: Stepper(
+            currentStep: currentStep,
+            onStepContinue: () {
+              if (currentStep < steps.length - 1) {
+                setState(() {
+                  currentStep++;
+                });
+              } else {
+                calculateCarbonFootprint();
+              }
+            },
+            onStepCancel: () {
+              if (currentStep > 0) {
+                setState(() {
+                  currentStep--;
+                });
+              }
+            },
+            steps: steps,
+            controlsBuilder: (BuildContext context, ControlsDetails details) {
+              return Row(
+                children: <Widget>[
+                  if (details.onStepContinue != null)
+                    ElevatedButton(
+                      onPressed: details.onStepContinue,
+                      child: Text('Next'),
+                    ),
+                  if (details.onStepCancel != null)
+                    TextButton(
+                      onPressed: details.onStepCancel,
+                      child: Text('Back'),
+                    ),
+                ],
+              );
+            },
+          ),
         ));
   }
 
@@ -389,6 +427,13 @@ class _CFCFormState extends State<CFCForm> {
         electricityConsumption, selectedElectricitySource);
     carbonFootprint =
         transportationEmissions + dietaryEmissions + electricityEmissions;
+
+    saveUserDataToFirestore(
+      carbonFootprint: carbonFootprint,
+      travelEmissions: transportationEmissions,
+      dietEmissions: dietaryEmissions,
+      electricityEmissions: electricityEmissions,
+    );
 
     // Navigate to the result screen
     Navigator.push(

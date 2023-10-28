@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fuel_finder/constants/colors.dart';
 import 'package:fuel_finder/screens/cfc_form.dart';
 
+import 'logs.dart';
+
 class CFC extends StatelessWidget {
   const CFC({super.key});
 
@@ -62,25 +64,21 @@ class IntermediateScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get the screen height using MediaQuery
     double screenHeight = MediaQuery.of(context).size.height;
-
-    // Calculate the top margin as a fraction of the screen height
-    double topMargin = screenHeight * 0.35; // Adjust the fraction as needed
+    double topMargin = screenHeight * 0.35; // Adjust the fraction
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Carbon Tracker'),
       ),
       body: Center(
-        child: Stack(
-          children: <Widget>[
+        child: Column(
+          children: [
             Image.asset('assets/images/sustainable.jpg'),
             Padding(
               padding: EdgeInsets.all(16.0),
               child: Card(
                 elevation: 2,
-                margin: EdgeInsets.only(top: topMargin),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Column(
@@ -89,14 +87,14 @@ class IntermediateScreen extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                          'What is carbon footprint ?',
+                          'What is a carbon footprint ?',
                           style: TextStyle(fontSize: 20),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                          'Carbon Footprint is the amount of greenhouse gases primarily carbon dioxide released into the atmosphere by a particular human activity. A carbon footprint can be a broad measure or be applied to the actions of an individual, a family, an event, an organization, or even an entire nation.',
+                          'A carbon footprint is the amount of greenhouse gases, primarily carbon dioxide, released into the atmosphere by a particular human activity. It can be a broad measure or be applied to the actions of an individual, a family, an event, an organization, or even an entire nation.',
                           style: TextStyle(fontSize: 16, color: textBody),
                         ),
                       ),
@@ -117,35 +115,45 @@ class IntermediateScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CFCForm(),
-                                  ),
-                                );
-                              },
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text('Go'),
-                                  Icon(Icons.arrow_forward),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                     ],
                   ),
                 ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LogsScreen(),
+                        ),
+                      );
+                    },
+                    child: Text('Check Logs'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CFCForm(),
+                        ),
+                      );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text('Track Emission'),
+                        // Icon(Icons.arrow_forward),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       initialData:
           UserModel(uid: "", name: '', email: '', profilePictureUrl: ''),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'FuelFinder',
         theme: ThemeData(
           primarySwatch: Colors.deepOrange,
